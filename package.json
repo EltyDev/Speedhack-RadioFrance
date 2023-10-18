@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "graphql-request": "^6.1.0"
+  },
+  "name": "speedhack-radiofrance",
+  "version": "1.0.0",
+  "main": "main.js",
+  "devDependencies": {},
+  "scripts": {
+    "start" : "node main.js"
+  },
+  "author": "Venodez",
+  "license": "ISC",
+  "description": ""
+}
