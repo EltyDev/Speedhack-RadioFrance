@@ -64,7 +64,10 @@ export default function Example({
           frequency: radio.score,
         })
       );
-      let radioNames = radiosParity[0].genderFrequency.map(
+      let index = letters.findIndex((element) => element.letter === selectedRadio);
+      if (index === -1)
+        index = 0;
+      let radioNames = radiosParity[index].genderFrequency.map(
         (gender) => gender.gender
       ) as string[];
       setLetters(letters);
@@ -76,12 +79,9 @@ export default function Example({
             ?.frequency || 0,
       }));
       setRadios(radios);
-      console.log(radios);
-      console.log(letters);
-      console.log(radioNames);
     }
     fetchData();
-  }, []);
+  }, [selectedRadio, selectedGenre]);
 
   if (width < 10) return null;
 

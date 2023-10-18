@@ -111,7 +111,7 @@ const getRadiosParity = (data) => {
     let result = {};
     for (let radio in data) {
         let total = data[radio][1] + data[radio][2];
-        result[radio] = {1: data[radio][1] / total, 2: data[radio][2] / total};
+        result[radio] = {1: data[radio][1] / total, 2: data[radio][2] / total, usage: total};
     }
     return result;
 }

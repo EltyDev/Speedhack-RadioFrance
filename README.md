@@ -8,7 +8,7 @@ Bienvenue dans notre application qui vise à promouvoir l'égalité des sexes da
 
 Notre équipe, composée de :
 
-- Olivier Pierron : [om.pierron@epitech.eu](mailto:om.pierron@epitech.eu)
+- Tom Pierron : [om.pierron@epitech.eu](mailto:om.pierron@epitech.eu)
 - Enzo Valentin : [enzo.valentin@epitech.eu](mailto:enzo.valentin@epitech.eu)
 - Mathis Zerbib : [mathis.zerbib@epitech.eu](mailto:mathis.zerbib@epitech.eu)
 
