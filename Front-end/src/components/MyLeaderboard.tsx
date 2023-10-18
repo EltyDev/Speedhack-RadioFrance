@@ -1,9 +1,19 @@
-import RadioListData from "../data/RadioListData";
-const MonLeaderboard = () => {
-  const radios = RadioListData;
+import getRadiosParityData from "../data/RadioListData";
+import { useEffect, useState } from "react";
 
-  // Triez les radios par score décroissant
-  radios.sort((a, b) => b.score - a.score);
+const MonLeaderboard = () => {
+  const [radios, setRadios] = useState([]) as any;
+  useEffect(() => {
+    async function fetchData() {
+      const radiosParity = await getRadiosParityData();
+      setRadios(radiosParity);
+    }
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    radios.sort((a: any, b: any) => b.score - a.score);
+  }, [radios]);
 
   return (
     <div className="bg-gray-100 min-h-screen p-8">
@@ -18,7 +28,7 @@ const MonLeaderboard = () => {
           </tr>
         </thead>
         <tbody>
-          {radios.map((radio, index) => (
+          {radios.map((radio: any, index: any) => (
             <tr key={radio.id}>
               <td className="border p-2">{index + 1}</td>
               <td className="border p-2">{radio.name}</td>

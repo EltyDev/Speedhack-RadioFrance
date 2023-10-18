@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Pie, { ProvidedProps, PieArcDatum } from "@visx/shape/lib/shapes/Pie";
 import { scaleOrdinal } from "@visx/scale";
 import { Group } from "@visx/group";
@@ -6,43 +6,25 @@ import { GradientPinkBlue } from "@visx/gradient";
 
 import { animated, useTransition, to } from "@react-spring/web";
 
-import RadioListData from "../data/RadioListData";
+import getRadiosParityData from "../data/RadioListData";
 
-// data and types
-type RadioNames = keyof (typeof RadioListData)[0]["genderFrequency"][0];
 
 interface parityScoreInterface {
-  label: RadioNames;
+  label: String;
   usage: number;
 }
-
-const letters: { letter: string; frequency: number }[] = RadioListData.map(
-  (radio) => ({
-    letter: radio.name,
-    frequency: radio.score / 100,
-  })
-);
-const radioNames = RadioListData[0].genderFrequency.map(
-  (gender) => gender.gender
-) as RadioNames[];
-const radios: parityScoreInterface[] = radioNames.map((name) => ({
-  label: name,
-  usage:
-    RadioListData[0].genderFrequency.find((g) => g.gender === name)
-      ?.frequency || 0,
-}));
 
 // accessor functions
 const usage = (d: parityScoreInterface) => d.usage;
 const frequency = (d: { letter: string; frequency: number }) => d.frequency;
 
 // color scales
-const getGenderColor = scaleOrdinal({
+const getGenderColor = (radioNames: any) => scaleOrdinal({
   domain: radioNames,
   range: ["lightblue", "pink"],
 });
-const getRadioColor = scaleOrdinal({
-  domain: letters.map((l) => l.letter),
+const getRadioColor = (letters: any) => scaleOrdinal({
+  domain: letters.map((l: any) => l.letter),
   range: [
     "rgba(93,30,91,1)",
     "rgba(93,30,91,0.8)",
@@ -67,8 +49,39 @@ export default function Example({
   margin = defaultMargin,
   animate = true,
 }: PieProps) {
+  const [letters, setLetters] = useState<{ letter: string; frequency: number }[]>([]);
+  const [radios, setRadios] = useState<parityScoreInterface[]>([]);
+  const [radioNames, setRadioNames] = useState<String[]>([]);
   const [selectedRadio, setSelectedRadio] = useState<string | null>(null);
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      const radiosParity = await getRadiosParityData();
+      const letters = radiosParity.map(
+        (radio) => ({
+          letter: radio.name,
+          frequency: radio.score,
+        })
+      );
+      let radioNames = radiosParity[0].genderFrequency.map(
+        (gender) => gender.gender
+      ) as string[];
+      setLetters(letters);
+      setRadioNames(radioNames);
+      let radios = radioNames.map((name) => ({
+        label: name,
+        usage:
+          radiosParity[0].genderFrequency.find((g) => g.gender === name)
+            ?.frequency || 0,
+      }));
+      setRadios(radios);
+      console.log(radios);
+      console.log(letters);
+      console.log(radioNames);
+    }
+    fetchData();
+  }, []);
 
   if (width < 10) return null;
 
@@ -121,7 +134,7 @@ export default function Example({
                   selectedRadio && selectedRadio === label ? null : label
                 )
               }
-              getColor={(arc) => getGenderColor(arc.data.label)}
+              getColor={(arc) => getGenderColor(radioNames)(arc.data.label)}
             />
           )}
         </Pie>
@@ -146,7 +159,7 @@ export default function Example({
                   selectedGenre && selectedGenre === letter ? null : letter
                 )
               }
-              getColor={({ data: { letter } }) => getRadioColor(letter)}
+              getColor={({ data: { letter } }) => getRadioColor(letters)(letter)}
             />
           )}
         </Pie>

@@ -1,11 +1,9 @@
-import fs from "fs";
+const fs = require("fs");
 
 const dataset = ".";
 const transcriptDir = `${dataset}/transcripts/vocapia`;
 const gridDir = `${dataset}/grid`;
 const radios = [];
-
-let data = {};
 
 const csvToJSON = (csv) => {
     let lines = csv.split("\n");
@@ -72,7 +70,7 @@ const getAllShows = async () => {
     return allShows;
 };
 
-const getData = async () => {
+const getAllData = async () => {
     let shows = await getAllShows();
     let totalSpeakGender = {"France Inter": {1: 0.0, 2: 0.0, shows: {}}, "France Info":{1: 0.0, 2: 0.0, shows: {}}, "France Culture": {1: 0.0, 2: 0.0, shows: {}}};
 
@@ -95,7 +93,7 @@ const getData = async () => {
     return totalSpeakGender;
 }
 
-const getParity = (showName) => {
+const geShowParity = (data, showName) => {
     for (let radio in data) {
         if (!(showName in data[radio].shows)) continue;
         let total = data[radio].shows[showName][1] + data[radio].shows[showName][2];
@@ -103,10 +101,26 @@ const getParity = (showName) => {
     }
 }
 
-(async () => {
+const getRadioParity = (data, radioName) => {
+    if (!(radioName in data)) return null;
+    let total = data[radioName][1] + data[radioName][2];
+    return {1: data[radioName][1] / total, 2: data[radioName][2] / total};
+}
+
+const getRadiosParity = (data) => {
+    let result = {};
+    for (let radio in data) {
+        let total = data[radio][1] + data[radio][2];
+        result[radio] = {1: data[radio][1] / total, 2: data[radio][2] / total};
+    }
+    return result;
+}
+
+const getData = async () => {
     radios.push(csvToJSON(await fs.promises.readFile(`${gridDir}/franceculture.csv`, "utf-8")));
     radios.push(csvToJSON(await fs.promises.readFile(`${gridDir}/franceinfo.csv`, "utf-8")));
     radios.push(csvToJSON(await fs.promises.readFile(`${gridDir}/franceinter.csv`, "utf-8")));
-    data = await getData();
-    console.log(getParity("JOURNAL DE 12H30"));
-})();
+    return await getAllData();
+}
+
+module.exports = {getRadiosParity, getRadioParity, geShowParity, getData};
