@@ -29,6 +29,6 @@ Pour commencer à utiliser notre application, suivez ces étapes simples :
 
 1. Clonez ce référentiel sur votre système local.
 2. Placez le dossier complet du transcript (fourni et présent sur Kaggle) à la racine du dossier Back-end de l'application.
-3. Suivez les instructions dans la section "Scripts Disponibles" pour exécuter l'application en mode développement.
+3. Suivez les instructions du readme de ./Front-end pour exécuter l'application.
 
 Nous vous remercions de soutenir notre initiative en faveur de l'égalité des sexes dans le temps de parole sur les radios de Radio France. Ensemble, nous pouvons faire une différence significative.
